@@ -1,4 +1,4 @@
-1.2.2 / 2017-07-05
+1.3.0 / 2017-07-05
 ==================
 
   * Switch the endpoint when datacenter is set to 'eu' 
