@@ -85,7 +85,21 @@ describe('Appboy', function() {
       var spy = sinon.spy(appboy, 'initializeTester');
       analytics.once('ready', function() {
         try {
-          assert.equal(spy.args[0][1].baseUrl, 'https://my.custom.endpoint.com');
+          assert.equal(spy.args[0][1].baseUrl, 'https://my.custom.endpoint.com/api/v3');
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      analytics.initialize();
+    });
+
+    it('should prefix the customEndpoint with https:// if it was not by the user', function(done) {
+      appboy.options.customEndpoint = 'my.custom.endpoint.com';
+      var spy = sinon.spy(appboy, 'initializeTester');
+      analytics.once('ready', function() {
+        try {
+          assert.equal(spy.args[0][1].baseUrl, 'https://my.custom.endpoint.com/api/v3');
           done();
         } catch (e) {
           done(e);
