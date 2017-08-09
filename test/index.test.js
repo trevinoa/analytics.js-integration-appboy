@@ -17,7 +17,8 @@ describe('Appboy', function() {
     safariWebsitePushId: '',
     enableHtmlInAppMessages: false,
     trackAllPages: false,
-    trackNamedPages: false
+    trackNamedPages: false,
+    customEndpoint: ''
   };
 
   beforeEach(function() {
@@ -45,6 +46,7 @@ describe('Appboy', function() {
       .option('enableHtmlInAppMessages', false)
       .option('trackAllPages', false)
       .option('trackNamedPages', false)
+      .option('customEndpoint', '')
       );
   });
 
