@@ -68,18 +68,29 @@ describe('Appboy', function() {
       analytics.load(appboy, done);
     });
 
-    it('should set the sdk endpoint to EU datacenter if options.datacenter === eu', function(done) {
-      appboy.options.datacenter = 'eu';
+    it('should set the sdk endpoint to the correct datacenter', function(done) {
+      var datacenterMappings = {
+        us:   'https://sdk-01.iad.appboy.com',
+        us02: 'https://sdk-02.iad.appboy.com',
+        us03: 'https://sdk-03.iad.appboy.com',
+        us04: 'https://sdk-04.iad.appboy.com',
+        eu:   'https://sdk-01.api.appboy.eu'
+      };
       var spy = sinon.spy(appboy, 'initializeTester');
-      analytics.once('ready', function() {
-        try {
-          assert.equal(spy.args[0][1].baseUrl, 'https://sdk.api.appboy.eu/api/v3');
-          done();
-        } catch (e) {
-          done(e);
-        }
-      });
-      analytics.initialize();
+      for (var option in datacenterMappings) {
+        if (!datacenterMappings.hasOwnProperty(option)) continue;
+        appboy.options.datacenter = option;
+        analytics.once('ready', function() {
+          try {
+            assert.equal(spy.args[0][1].baseUrl, datacenterMappings[option] + '/api/v3');
+            done();
+          } catch (e) {
+            done(e);
+          }
+          spy.restore();
+        });
+        analytics.initialize();
+      }
     });
 
     it('should set the sdk endpoint to a custom URI if one is provided', function(done) {
