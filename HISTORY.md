@@ -1,7 +1,13 @@
-1.5.0 / 2017-09-25
+
+1.5.0 / 2018-07-27
 ==================
 
   * Update datacenter mappings to support new Appboy clusters
+
+1.5.0 / 2018-04-11
+==================
+
+  * Add support for v2 of Braze SDK
 
 1.4.1 / 2017-08-09
 ==================
