@@ -79,6 +79,31 @@ describe('Appboy', function() {
       analytics.load(appboy, done);
     });
 
+    it('should set the sdk endpoint to the correct datacenter', function(done) {
+      var datacenterMappings = {
+        us:   'https://sdk-01.iad.braze.com',
+        us02: 'https://sdk-02.iad.braze.com',
+        us03: 'https://sdk-03.iad-03.braze.com',
+        eu:   'https://sdk-01.api.braze.eu'
+      };
+
+      var spy = sinon.spy(appboy, 'initializeTester');
+      for (var option in datacenterMappings) {
+        if (!datacenterMappings.hasOwnProperty(option)) continue;
+        appboy.options.datacenter = option;
+        analytics.once('ready', function() {
+          try {
+            assert.equal(spy.args[0][1].baseUrl, datacenterMappings[option] + '/api/v3');
+            done();
+          } catch (e) {
+            done(e);
+          }
+          spy.restore();
+        });
+        analytics.initialize();
+      }
+    });
+
     it('should use initializeV1 if version is set to 1', function(done) {
       var V1spy = sinon.spy(appboy, 'initializeV1');
       var V2spy = sinon.spy(appboy, 'initializeV2');
@@ -103,20 +128,6 @@ describe('Appboy', function() {
         try {
           assert(V2spy.called);
           assert(!V1spy.called);
-          done();
-        } catch (e) {
-          done(e);
-        }
-      });
-      analytics.initialize();
-    });
-
-    it('should set the sdk endpoint to EU datacenter if options.datacenter === eu', function(done) {
-      appboy.options.datacenter = 'eu';
-      var spy = sinon.spy(appboy, 'initializeTester');
-      analytics.once('ready', function() {
-        try {
-          assert.equal(spy.args[0][1].baseUrl, 'https://sdk.api.appboy.eu/api/v3');
           done();
         } catch (e) {
           done(e);
